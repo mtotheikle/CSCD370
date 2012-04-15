@@ -53,6 +53,8 @@ public class TempConverter implements ActionListener {
 		fahrenheitText = new JTextField(20);
 
 		changeTemp = new JButton("Convert");
+		frame.getRootPane().setDefaultButton(changeTemp); // Make key press on enter trigger the convert method
+		
 		celLabel = new JLabel("Celcius", SwingConstants.LEFT);
 		celciusText = new JTextField(20);
 
@@ -77,17 +79,27 @@ public class TempConverter implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent event) {
 		if (!celciusText.getText().equals("") && fahrenheitText.getText().equals("")) {
-			// Compute fahrenheit
-			float celcius = (float) (Double.parseDouble(celciusText.getText()));
-			float fahrenheit = (float) (celcius * 1.8 + 32);
-			fahrenheitText.setText(Math.round(fahrenheit*100)/100.0d + ""); // Do a little rounding
-			celciusText.setText("");
+			if (!isNumeric(celciusText.getText())) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid integer in celcius field");
+				celciusText.setText("");
+			} else {
+				// Compute fahrenheit
+				float celcius = (float) (Double.parseDouble(celciusText.getText()));
+				float fahrenheit = (float) (celcius * 1.8 + 32);
+				fahrenheitText.setText(Math.round(fahrenheit*100)/100.0d + ""); // Do a little rounding
+				celciusText.setText("");
+			}
 		} else if (celciusText.getText().equals("") && !fahrenheitText.getText().equals("")) {
-			// Compute celcius
-			float fahrenheit = (float) (Double.parseDouble(fahrenheitText.getText()));
-		    float celcius = (float) ((fahrenheit - 32) / 1.8); // Do a little rounding
-		    celciusText.setText(Math.round(celcius*100)/100.0d + "");
-		    fahrenheitText.setText("");
+			
+			if (!isNumeric(fahrenheitText.getText())) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid integer in fahrenheit field");
+				fahrenheitText.setText("");
+			} else { // Compute celcius
+				float fahrenheit = (float) (Double.parseDouble(fahrenheitText.getText()));
+			    float celcius = (float) ((fahrenheit - 32) / 1.8); // Do a little rounding
+			    celciusText.setText(Math.round(celcius*100)/100.0d + "");
+			    fahrenheitText.setText("");
+			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Please enter either celcius value or fahrenheit value, but not both");
 		}
@@ -121,7 +133,7 @@ public class TempConverter implements ActionListener {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		TempConverter converter = new TempConverter();
 	}
-
+	
 	/**
 	 * Main method
 	 * 
