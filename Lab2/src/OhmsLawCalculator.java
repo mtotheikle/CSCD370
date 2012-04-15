@@ -38,9 +38,9 @@ public class OhmsLawCalculator extends JFrame
         JLabel titleLabel = new JLabel("Ohms Law Calculator");
 		titleLabel.setFont(new Font("Serif", Font.BOLD, 18));
 		titleLabel.setForeground(Color.blue);
-		
-        JButton findButton = new JButton("Find");
-        //JButton cancelButton = new JButton("Cancel");
+
+		JLabel wattsLabel = new JLabel("Watts (P) = I * E");
+		final JTextField resultsTextField = new JTextField();
 
         JButton calcButton = new JButton("Calculate");
         JButton clearButton = new JButton("Clear");
@@ -69,24 +69,40 @@ public class OhmsLawCalculator extends JFrame
         layout.setAutoCreateContainerGaps(true);
 
         layout.setHorizontalGroup(layout.createSequentialGroup()
-        	.addGroup(layout.createParallelGroup(LEADING)
-    			.addComponent(labelPic1)
-			)
     		.addGroup(layout.createParallelGroup(LEADING)
-    			.addComponent(voltsLabel)
-    			.addComponent(resistanceLabel)
-    			.addComponent(currentLabel)
-    			.addComponent(calcButton)
-			)
-			.addGroup(layout.createParallelGroup(LEADING)
-				.addComponent(voltsTextField)
-				.addComponent(resistanceTextField)
-				.addComponent(currentTextField)
-    			.addComponent(clearButton)
+	    		.addGroup(layout.createSequentialGroup()
+	    			.addGap(100)
+        			.addComponent(titleLabel)
+	    		)
+    			.addGroup(layout.createSequentialGroup()
+		        	.addGroup(layout.createParallelGroup(LEADING)
+		    			.addComponent(labelPic1)
+					)
+		    		.addGroup(layout.createParallelGroup(LEADING)
+		    			.addComponent(voltsLabel)
+		    			.addComponent(resistanceLabel)
+		    			.addComponent(currentLabel)
+		    			.addComponent(calcButton)
+					)
+					.addGroup(layout.createParallelGroup(LEADING)
+						.addComponent(voltsTextField)
+						.addComponent(resistanceTextField)
+						.addComponent(currentTextField)
+		    			.addComponent(clearButton)
+					)
+				)
+    			.addGroup(layout.createSequentialGroup()
+    				.addComponent(wattsLabel)
+    				.addComponent(resultsTextField)
+				)
 			)
 		);
         
-        layout.setVerticalGroup(layout.createSequentialGroup()
+        layout.setVerticalGroup(layout.createSequentialGroup()	
+    		.addGroup(layout.createParallelGroup(BASELINE)
+				.addComponent(titleLabel)
+			)
+			.addGap(25)
         	.addGroup(layout.createParallelGroup(BASELINE)
     			.addComponent(labelPic1)
     			.addGroup(layout.createSequentialGroup()
@@ -109,6 +125,10 @@ public class OhmsLawCalculator extends JFrame
 					)
 				)
 			)
+			.addGroup(layout.createParallelGroup(BASELINE)
+				.addComponent(wattsLabel)
+				.addComponent(resultsTextField)
+			)
 		);
   
         clearButton.addActionListener(new ActionListener() {
@@ -130,7 +150,9 @@ public class OhmsLawCalculator extends JFrame
 					if (isNumeric(currentTextField.getText()) && isNumeric(resistanceTextField.getText())) {
 						// Calculate volts
 						double volts = Double.parseDouble(currentTextField.getText()) * Double.parseDouble(resistanceTextField.getText());
-						voltsTextField.setText(Double.toString(round(volts, 2)));
+						
+						double p = Double.parseDouble(currentTextField.getText()) * volts;
+						resultsTextField.setText(Double.toString(round(p, 2)) + " = " + currentTextField.getText() + " * " + Double.toString(round(volts, 2)));
 						
 						currentTextField.setText("");
 						resistanceTextField.setText("");
@@ -146,7 +168,9 @@ public class OhmsLawCalculator extends JFrame
 					if (isNumeric(voltsTextField.getText()) && isNumeric(resistanceTextField.getText())) {
 						// Calculate current
 						double current = Double.parseDouble(voltsTextField.getText()) / Double.parseDouble(resistanceTextField.getText());
-						currentTextField.setText(Double.toString(round(current, 2)));	
+						
+						double p = Double.parseDouble(voltsTextField.getText()) * current;
+						resultsTextField.setText(Double.toString(round(p, 2)) + " = " + Double.toString(round(current, 2)) + " * " + voltsTextField.getText());
 						
 						currentTextField.setText("");
 						resistanceTextField.setText("");
@@ -164,6 +188,9 @@ public class OhmsLawCalculator extends JFrame
 						double resistance = Double.parseDouble(voltsTextField.getText()) / Double.parseDouble(currentTextField.getText());
 						resistanceTextField.setText(Double.toString(round(resistance, 2)));
 						
+						double p = Double.parseDouble(voltsTextField.getText()) * Double.parseDouble(currentTextField.getText());
+						resultsTextField.setText(Double.toString(round(p, 2)) + " = " + currentTextField.getText() + " * " + voltsTextField.getText());						
+
 						currentTextField.setText("");
 						resistanceTextField.setText("");
 						voltsTextField.setText("");
