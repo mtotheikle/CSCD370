@@ -158,9 +158,6 @@ class drawCube {
 	    gr.draw (Bottom);
 	    */
 	    
-	    drawSquare(image, gr, 50, 150, 100);
-
-	    drawSquare(image, gr, 88, 125, 100);
 	    
 	    gr.drawLine(150, 150, 175, 125);
 		repaintImage(image);
@@ -250,51 +247,5 @@ class drawCube {
 //		imageLabel.setIcon(new ImageIcon(image));
 //		imageLabel.setText("Completed !");
 
-	}
-	
-	private static void drawSquare(BufferedImage image, java.awt.Graphics2D gr, int x, int y, int width)
-	{
-		/*
-		int x1 = 50;
-		int y1 = 150;
-	
-		int x2 = x + width; //150;
-		*/
-		//int y2 = y150;
-		
-		int x3 = 150;
-		int y3 = 250;
-		
-		int x4 = 50;
-		int y4 = 250;
-		
-		// Top line
-		gr.drawLine(x, y, x + width, y);
-		repaintImage(image);
-		waitNS(500);
-
-	/*
-		gr.drawLine(188, 25, 188, 125);
-		waitNS(600);
-*/
-
-		// Right line
-		gr.drawLine(x + width, y, x + width, y + width);
-		repaintImage(image);
-		waitNS(500);
-
-		// Bottom line
-		gr.drawLine(x + width, y + width, x, y + width);
-		repaintImage(image);
-		waitNS(500);
-		
-		// Left line
-		gr.drawLine(x, y + width, x, y);
-		repaintImage(image);
-		waitNS(500);
-		
-		//int yellow2 = packRgb(255, 255, 0);
-		//floodFill(image, (x + (x + width)) / 2, (y + (y + width)) / 2, yellow2);// flood fill at
-																// center
 	}
 }

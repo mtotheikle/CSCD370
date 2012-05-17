@@ -1,0 +1,298 @@
+/******************************************************************************
+ * File : drawCube.java
+ * Author : http://java.macteki.com/
+ * Description :
+ * Demonstrate a flood fill algorithm.
+ * Tested with : JDK 1.6
+ * Macteki flood filler
+ * http://java.macteki.com/2011/03/how-to-do-flood-fill-operation-in-java.html
+ * Ivan Macteki (Macteki)
+ * Edwin Armstrong A.K.A (efa)
+ ******************************************************************************/
+
+import java.awt.image.BufferedImage;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import java.awt.Point;
+import java.awt.*;
+import javax.swing.*;
+import java.awt.geom.*;
+
+class drawCube {
+	// ******************************************************************
+	// fill the whole image with a color specified by its RGB component
+	// by Macteki
+	// ******************************************************************
+	static void fillImage(BufferedImage image, int red, int green, int blue) {
+		int packedRGB = packRgb(255, 255, 255);// white
+
+		for (int y = 0; y < image.getHeight(null); y++) {
+			for (int x = 0; x < image.getWidth(null); x++)
+				image.setRGB(x, y, packedRGB);
+		}
+	}
+
+	// *************************************************
+	// implements the flood fill algorithm. by Macteki
+	// *************************************************
+	public static void floodFill(BufferedImage image, int x, int y,
+			int fillColor) {
+		java.util.ArrayList<Point> examList = new java.util.ArrayList<Point>();
+
+		int initialColor = image.getRGB(x, y);
+		examList.add(new Point(x, y));
+
+		while (examList.size() > 0) {
+			Point p = examList.remove(0); // get and remove the first point in
+											// the list
+			if (image.getRGB(p.x, p.y) == initialColor) {
+				x = p.x;
+				y = p.y;
+				image.setRGB(x, y, fillColor); // fill current pixel
+
+				examList.add(new Point(x - 1, y)); // check west neighbor
+				examList.add(new Point(x + 1, y)); // check east neighbor
+				examList.add(new Point(x, y - 1)); // check north neighbor
+				examList.add(new Point(x, y + 1)); // check south neighbor
+
+				// waitNS(1); // delay to see floodFill() work
+				// repaintImage(image);
+
+			}
+		}
+	}
+
+	// repaint the image by Macteki
+	private static void repaintImage(BufferedImage image) {
+		_imageLabel.setIcon(new ImageIcon(image));
+		_imageLabel.repaint();
+	}
+
+	// ******************************************************
+	// waitNS:: wait for perscipbed nanosecond (efa) 5/10/12
+	// ******************************************************
+	public static void waitNS(long ns) {
+		try {
+			Thread.sleep(ns);
+		} // Pause ns
+		catch (Exception ignore) {
+			;
+		}
+	}
+
+	// ***********************************************
+	// packRGB:: Create a packed color it. by Macteki
+	// ***********************************************
+	public static int packRgb(int r, int g, int b) {
+		return (r * 256 + g) * 256 + b;
+	}
+
+	static JLabel _imageLabel;
+
+	protected static Rectangle2D Front;
+	  protected static Rectangle2D Back;
+	  protected static GeneralPath Top;
+	  protected static GeneralPath Bottom;
+	  protected static GeneralPath Left;
+	  protected static GeneralPath Right;
+	  
+	public static void main(String[] args) throws Exception {
+		// create an 300x300 RGB image
+		BufferedImage image = new BufferedImage(300, 300,
+				BufferedImage.TYPE_INT_RGB);
+
+		// fill the image with green color
+		fillImage(image, 0, 255, 0);
+
+		JLabel imageLabel = new JLabel();
+		_imageLabel = imageLabel; // make it global
+		imageLabel.setIcon(new ImageIcon(image));
+		imageLabel.setText("Filling the box with yellow color ...");
+
+		javax.swing.JFrame window = new javax.swing.JFrame();
+		window.setTitle("Cube Experiment");
+		window.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+
+		window.add(imageLabel);
+
+		window.pack();
+		window.setVisible(true);
+
+		// ************************* Draw a box and fill it, (efa) 5/10/12
+		// ************************
+		java.awt.Graphics2D gr = (java.awt.Graphics2D) image.getGraphics();
+		
+		gr.setColor(new java.awt.Color(0, 0, 255)); // blue
+		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
+		
+		Front = new Rectangle2D.Double (50, 50, 100, 100);
+	    Back = new Rectangle2D.Double (88, 25, 100, 100);
+	    Top = new GeneralPath ();
+	    Bottom = new GeneralPath ();
+	    Left = new GeneralPath ();
+	    Right = new GeneralPath ();
+	    
+	    Top.moveTo (50, 50);
+	    Top.lineTo (150, 50);
+	    Top.lineTo (187, 25);
+	    Top.lineTo (88, 25);
+	    Top.lineTo (50, 50);
+	    
+	    Bottom.moveTo (50, 150);
+	    Bottom.lineTo (150, 150);
+	    Bottom.lineTo (188, 125);
+	    Bottom.lineTo (88, 125);
+	    Bottom.lineTo (50, 150);
+	    
+	    Right.moveTo (150, 50);
+	    Right.lineTo (188, 25);
+	    Right.lineTo (188, 125);
+	    Right.lineTo (150, 150);
+	    Right.lineTo (150, 50);
+	    
+	    /*
+	    gr.draw (Back);
+	    gr.draw (Front);
+	    gr.draw (Top);
+	    gr.draw (Right);
+	    gr.draw (Bottom);
+	    */
+	    
+	    drawSquare(image, gr, 50, 150, 100);
+
+		imageLabel.setIcon(new ImageIcon(image));
+		imageLabel.setText("Completed !");
+		
+		/*
+		int x1 = 50;
+		int y1 = 150;
+		int x2 = 150;
+		int y2 = 150;
+		int x3 = 150;
+		int y3 = 250;
+		int x4 = 50;
+		int y4 = 250;
+		
+		gr.setColor(new java.awt.Color(0, 0, 255)); // blue
+		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
+		*/
+		
+		//gr.drawLine(10,10,40,40);
+	    
+//		gr.setColor(new java.awt.Color(0, 0, 255)); // blue
+//		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
+//
+//		gr.drawLine(x1, y1, x2, y2);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		gr.drawLine(x2, y2, x3, y3);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		gr.drawLine(x3, y3, x4, y4);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		gr.drawLine(x4, y4, x1, y1);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		// fill the square with yellow color
+//		int yellow = packRgb(255, 255, 0);
+//		int black = packRgb(0, 0, 0);
+//		floodFill(image, (x1 + x2) / 2, (y1 + y4) / 2, yellow);// flood fill at
+//																// center
+//		// *****************************************************************************************
+//
+//		int x1_2 = 70;
+//		int y1_2 = 170;
+//		int x2_2 = 170;
+//		int y2_2 = 170;
+//		int x3_2 = 170;
+//		int y3_2 = 250;
+//		int x4_2 = 70;
+//		int y4_2 = 250;
+//
+//		gr.setColor(new java.awt.Color(0, 0, 255)); // blue
+//		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
+//
+//		gr.drawLine(x1_2, y1_2, x2_2, y2_2);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		gr.drawLine(x2_2, y2_2, x3_2, y3_2);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		gr.drawLine(x3_2, y3_2, x4_2, y4_2);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		gr.drawLine(x4_2, y4_2, x1_2, y1_2);
+//		repaintImage(image);
+//		waitNS(500);
+//
+//		// fill the square with yellow color
+//		int yellow2 = packRgb(255, 255, 0);
+//		int black2 = packRgb(0, 0, 0);
+//		floodFill(image, (x1_2 + x2_2) / 2, (y1_2 + y4_2) / 2, yellow2);// flood fill at
+//																// center
+//
+//		imageLabel.setIcon(new ImageIcon(image));
+//		imageLabel.setText("Completed !");
+
+	}
+	
+	private static void drawSquare(BufferedImage image, java.awt.Graphics2D gr, int x, int y, int width)
+	{
+		/*
+		int x1 = 50;
+		int y1 = 150;
+	
+		int x2 = x + width; //150;
+		*/
+		//int y2 = y150;
+		
+		int x3 = 150;
+		int y3 = 250;
+		
+		int x4 = 50;
+		int y4 = 250;
+
+		gr.drawLine(150, 150, 175, 125);
+		repaintImage(image);
+		
+		gr.drawLine(x, y, 125, 125);
+		repaintImage(image);
+		
+		// Top line
+		gr.drawLine(x, y, x + width, y);
+		repaintImage(image);
+		waitNS(500);
+
+	/*
+		gr.drawLine(188, 25, 188, 125);
+		waitNS(600);
+*/
+
+		// Right line
+		gr.drawLine(x + width, y, x + width, y + width);
+		repaintImage(image);
+		waitNS(500);
+
+		// Bottom line
+		gr.drawLine(x + width, y + width, x, y + width);
+		repaintImage(image);
+		waitNS(500);
+		
+		// Left line
+		gr.drawLine(x, y + width, x, y);
+		repaintImage(image);
+		waitNS(500);
+		
+		int yellow2 = packRgb(255, 255, 0);
+		floodFill(image, (x + (x + width)) / 2, (y + (y + width)) / 2, yellow2);// flood fill at
+																// center
+	}
+}

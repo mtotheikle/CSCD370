@@ -11,8 +11,13 @@
  ******************************************************************************/
 
 import java.awt.image.BufferedImage;
+
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
 import java.awt.Point;
 
 class drawCubeTwo {
@@ -52,16 +57,9 @@ class drawCubeTwo {
 					examList.add(new Point(x + 1, y)); // check east neighbor
 					examList.add(new Point(x, y - 1)); // check north neighbor
 					examList.add(new Point(x, y + 1)); // check south neighbor
-	
-					try {
-						//Thread.sleep(1);
-					} // Pause ns
-					catch (Exception ignore) {
-						;
-					}
-					
-					 waitNS(1); // delay to see floodFill() work
-					// repaintImage(image);
+
+					waitNS(1); // delay to see floodFill() work
+					repaintImage(image);
 				}
 			} catch (Exception e) {
 				System.out.println(p.x + " " + p.y);
@@ -80,7 +78,7 @@ class drawCubeTwo {
 	// ******************************************************
 	public static void waitNS(long ns) {
 		try {
-			//Thread.sleep(ns);
+			Thread.sleep(ns);
 		} // Pause ns
 		catch (Exception ignore) {
 			;
@@ -102,24 +100,22 @@ class drawCubeTwo {
 				BufferedImage.TYPE_INT_RGB);
 
 		// fill the image with green color
-		fillImage(image, 0, 255, 0);
+		fillImage(image, 0, 0, 0);
 
 		JLabel imageLabel = new JLabel();
 		_imageLabel = imageLabel; // make it global
 		imageLabel.setIcon(new ImageIcon(image));
-		imageLabel.setText("Filling the box with yellow color ...");
-
+		imageLabel.setText("Drawing the wireframe cube...");
+		
 		javax.swing.JFrame window = new javax.swing.JFrame();
+		window.setSize(550, 300);
 		window.setTitle("Cube Experiment");
-		window.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-
+		window.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);	
 		window.add(imageLabel);
-
-		window.pack();
+		
+		//window.pack();
 		window.setVisible(true);
 
-		// ************************* Draw a box and fill it, (efa) 5/10/12
-		// ************************
 		java.awt.Graphics2D gr = (java.awt.Graphics2D) image.getGraphics();
 
 		int x1 = 50;
@@ -133,7 +129,7 @@ class drawCubeTwo {
 
 		gr.setColor(new java.awt.Color(0, 0, 0)); // blue
 		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
-
+		
 		gr.drawLine(x1, y1, x2, y2);
 		repaintImage(image);
 		waitNS(500);
@@ -159,10 +155,7 @@ class drawCubeTwo {
 		int b2y3 = 200;
 		int b2x4 = 100;
 		int b2y4 = 200;
-
-		//gr.setColor(new java.awt.Color(0, 0, 0)); // blue
-		//gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
-
+		
 		gr.drawLine(b2x1, b2y1, b2x2, b2y2);
 		repaintImage(image);
 		waitNS(500);
@@ -196,6 +189,13 @@ class drawCubeTwo {
 		repaintImage(image);
 		waitNS(500);
 
+		imageLabel.setText("Done drawing wireframe cube...");
+		waitNS(500);
+
+		imageLabel.setText("Cleaning up the cube for coloring...");
+		waitNS(500);
+		
+		// Erase some middle lines
 		gr.setColor(new java.awt.Color(255, 255, 255)); // white
 		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
 
@@ -207,25 +207,101 @@ class drawCubeTwo {
 		repaintImage(image);
 		waitNS(500);
 		
+		// Redraw top line of box one to make it sharper
+		gr.setColor(new java.awt.Color(0, 0, 0)); // white
+		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
+		gr.drawLine(x1, y1, x2, y2);
+		repaintImage(image);
+		waitNS(500);
 		
+		imageLabel.setText("Coloring the top piece yellow...");
+		
+		// Color in the different sides of the box
 		int yellow = packRgb(255, 255, 0);
-		floodFill(image, ((x1 + b2x1)  / 2), ((b2x1 + b2y2) / 2) + 30, yellow);
+		floodFill(image, x1 + 75, y1 - 25, yellow);
 
+		imageLabel.setText("Coloring the right piece green...");
+		
 		int green = packRgb(6, 145, 6);
-		floodFill(image, 150 + 25, 150 + 50, green);
+		floodFill(image, 150 + 25, 175, green);
+
+		imageLabel.setText("Coloring the back piece blue...");
 		
 		int blue = packRgb(25, 25, 255);
 		floodFill(image, x1 + 50 + 25, y2 + 25, blue);
 		
-		// fill the square with yellow color
-		// int yellow = packRgb(255,255,0);
-		int black = packRgb(0, 0, 0);
-		// floodFill(image, (x2+b2x2)/2, (y3+b2y4)/2, yellow);//flood fill at
-		// center
-		// *****************************************************************************************
+		imageLabel.setText("Coloring the left piece orange...");
+		
+		int orange = packRgb(200, 105, 40);
+		floodFill(image, x1 + 25, y1 + 40, orange);
 
-		imageLabel.setIcon(new ImageIcon(image));
-		imageLabel.setText("Completed !");
+		imageLabel.setText("Coloring the bottom piece pink...");
+		
+		int pink = packRgb(225, 30, 220);
+		floodFill(image, x3 - 35, y3 - 25, pink);
+		
+		imageLabel.setText("Completed! Will erase image in 5 seconds");
+		
+		waitNS(5000);
+		
+		int white = packRgb(255, 255, 255);
+		floodFill(image, x1 + 75, y1 - 25, white);
+		floodFill(image, 150 + 25, 175, white);
+		floodFill(image, x1 + 50 + 25, y2 + 25, white);
+		floodFill(image, x1 + 25, y1 + 40, white);
+		floodFill(image, x3 - 35, y3 - 25, white);
+		
+		// Erase lines
+		gr.setColor(new java.awt.Color(255, 255, 255)); // white
+		gr.setStroke(new java.awt.BasicStroke(2)); // set pen width to 2 pixels
+		
+		gr.drawLine(x1, y1, x2, y2);
+		repaintImage(image);
+		waitNS(500);
 
+		gr.drawLine(x2, y2, x3, y3);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(x3, y3, x4, y4);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(x4, y4, x1, y1);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(b2x1, b2y1, b2x2, b2y2);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(b2x2, b2y2, b2x3, b2y3);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(b2x3, b2y3, b2x4, b2y4);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(b2x4, b2y4, b2x1, b2y1);
+		repaintImage(image);
+		waitNS(500);
+
+		// Draw sides
+		gr.drawLine(x1, y1, b2x1, b2y1);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(x2, y2, b2x2, b2y2);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(x3, y3, b2x3, b2y3);
+		repaintImage(image);
+		waitNS(500);
+
+		gr.drawLine(x4, y4, b2x4, b2y4);
+		repaintImage(image);
+		waitNS(500);
 	}
 }
